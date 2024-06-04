@@ -2,6 +2,8 @@ import { readFileSync } from 'fs';
 import resolvers from '../../resolvers.js';
 import { ApolloServer, HeaderMap, type BaseContext, type ContextFunction, type HTTPGraphQLRequest } from '@apollo/server';
 import { parse } from 'url';
+import { join } from 'path';
+import { PROJECT_PATH } from '$env/static/private';
 
 interface MyContextFunctionArgument {
   req: Request;
@@ -23,10 +25,9 @@ type HTTPGraphQLResponse = HTTPGraphQLHead & {
 const defaultContext: ContextFunction<[MyContextFunctionArgument], any> = async () => ({});
 const context: ContextFunction<[MyContextFunctionArgument], BaseContext> = defaultContext;
 
-// must handle in production
-let path = 'src/schema.graphql';
-if (process.env.NODE_ENV === 'production') {
-  path = 'schema.graphql';
+let path = join(PROJECT_PATH, 'src', 'schema.graphql');
+if (process.env.NODE_ENV !== 'development') {
+  path = join(PROJECT_PATH, 'schema.graphql');
 }
 const typeDef = readFileSync(path, 'utf8');
 const server = new ApolloServer({ 
