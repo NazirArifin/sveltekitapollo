@@ -3,6 +3,8 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
+    "postWindows": "copy src\\schema.graphql . && vite build && move /y schema.graphql build\\schema.graphql",
+    "postLinux": "cp src/schema.graphql . && vite build && mv schema.graphql build/schema.graphql",
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
